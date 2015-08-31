@@ -8,4 +8,9 @@
     <string name="Build_it_bigger">BUILD IT BIGGER</string>
     <string name="bacon_reader">BACON READER</string>
     <string name="capstone_myown_app">CAPSTONE: MY OWN APP</string>
+    <string name="title_activity_artist_search">ArtistSearchActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_popular_movies">PopularMoviesActivity</string>
+    <string name="title_activity_movie_details_view">MovieDetailsViewActivity</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.android.myappportfolio;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +23,13 @@ public class MainActivity extends Activity {
         Button button4 = (Button) findViewById(R.id.button4);
         Button button5 = (Button) findViewById(R.id.button5);
 
-        button0.setOnClickListener(new ButtonOnClickListner(button0.getText()));
+        button0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PopularMoviesActivity.class);
+                startActivity(intent);
+            }
+        });
         button1.setOnClickListener(new ButtonOnClickListner(button1.getText()));
         button2.setOnClickListener(new ButtonOnClickListner(button2.getText()));
         button3.setOnClickListener(new ButtonOnClickListner(button3.getText()));
@@ -45,7 +52,7 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatement`
         if (id == R.id.action_settings) {
             return true;
         }
