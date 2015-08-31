@@ -83,7 +83,7 @@
         android:fontFamily="Arial"
         android:textSize="18sp"
         android:textStyle="italic"
-        android:paddingTop="10dp"
+        android:paddingTop="8dp"
         android:layout_marginLeft="10dp"
         android:textColor="@color/detail_view_movie_details_text_color"
         />
