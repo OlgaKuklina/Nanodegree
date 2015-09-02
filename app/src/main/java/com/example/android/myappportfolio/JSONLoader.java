@@ -28,7 +28,7 @@ public class JSONLoader {
         BufferedReader reader = null;
         String movieJsonStr = null;
         try {
-            Uri builtUri = Uri.parse(MOVIE_BASE_URI + relativeUri + "?").buildUpon()
+            Uri builtUri = Uri.parse(MOVIE_BASE_URI + relativeUri).buildUpon()
                     .appendQueryParameter("api_key", APP_KEY).build();
             URL url = new URL(builtUri.toString());
             Log.v(TAG, "Built URI" + builtUri.toString());

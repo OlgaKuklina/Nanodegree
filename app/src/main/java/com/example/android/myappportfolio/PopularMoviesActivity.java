@@ -2,6 +2,7 @@ package com.example.android.myappportfolio;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.GridView;
 
 public class PopularMoviesActivity extends Activity {
     private static final String TAG = PopularMoviesActivity.class.getSimpleName();
+    private static final String SHARED_PREF_NAME = "com.example.android.myappportfolio.popular.movies";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +24,9 @@ public class PopularMoviesActivity extends Activity {
         final ImageAdapter adapter = new ImageAdapter(this);
         gridview.setAdapter(adapter);
 
-
+        SharedPreferences prefs = this.getSharedPreferences(SHARED_PREF_NAME, 0);
+        String sortOrder = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
+        Log.d(TAG, "sortOrder = " + sortOrder);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -34,9 +38,8 @@ public class PopularMoviesActivity extends Activity {
             }
         });
 
-        FetchMovieTask fetchMovieTask =  new FetchMovieTask(adapter);
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(adapter, sortOrder);
         fetchMovieTask.execute();
-
 
     }
 
@@ -56,9 +59,10 @@ public class PopularMoviesActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, PopularMoviesSettingsActivity.class);
+            startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

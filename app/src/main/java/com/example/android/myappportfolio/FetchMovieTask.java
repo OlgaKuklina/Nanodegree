@@ -24,8 +24,10 @@ class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<MovieData>>{
     private static final String POSTER_BASE_URI = "http://image.tmdb.org/t/p/w185";
     private static final String TAG = FetchMovieTask.class.getSimpleName();
     private final ImageAdapter adapter;
+    private final String sortOrder;
 
-    FetchMovieTask(ImageAdapter adapter) {
+    FetchMovieTask(ImageAdapter adapter, String sortOrder) {
+        this.sortOrder = sortOrder;
         this.adapter = adapter;
     }
 
@@ -34,7 +36,7 @@ class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<MovieData>>{
         ArrayList<MovieData>  moviePosters = new ArrayList<>();
         try {
 
-            JSONObject jObj = JSONLoader.load("/discover/movie");
+            JSONObject jObj = JSONLoader.load("/discover/movie?sort_by=" + sortOrder);
             Log.v(TAG, "page:" + jObj.getInt("page"));
             JSONArray movieArray = jObj.getJSONArray("results");
             Log.v(TAG,"length:" + movieArray.length());

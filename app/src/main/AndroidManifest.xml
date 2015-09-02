@@ -37,6 +37,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.myappportfolio.PopularMoviesActivity" />
         </activity>
+        <activity
+            android:name=".PopularMoviesSettingsActivity"
+            android:label="@string/title_popular_movies_settings_activity"
+            android:parentActivityName=".PopularMoviesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.myappportfolio.PopularMoviesActivity" />
+        </activity>
     </application>
 
 </manifest>
