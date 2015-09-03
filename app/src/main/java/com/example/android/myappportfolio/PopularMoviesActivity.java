@@ -3,17 +3,22 @@ package com.example.android.myappportfolio;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 public class PopularMoviesActivity extends Activity {
     private static final String TAG = PopularMoviesActivity.class.getSimpleName();
     private static final String SHARED_PREF_NAME = "com.example.android.myappportfolio.popular.movies";
+    private ImageAdapter adapter;
+    private String sortOrder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +26,12 @@ public class PopularMoviesActivity extends Activity {
         setContentView(R.layout.activity_popular_movies);
         Log.d(TAG, "Hi");
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        final ImageAdapter adapter = new ImageAdapter(this);
+        adapter = new ImageAdapter(this);
         gridview.setAdapter(adapter);
 
+
         SharedPreferences prefs = this.getSharedPreferences(SHARED_PREF_NAME, 0);
-        String sortOrder = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
+        sortOrder = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
         Log.d(TAG, "sortOrder = " + sortOrder);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -38,9 +44,7 @@ public class PopularMoviesActivity extends Activity {
             }
         });
 
-        FetchMovieTask fetchMovieTask = new FetchMovieTask(adapter, sortOrder);
-        fetchMovieTask.execute();
-
+        gridview.setOnScrollListener(new PopularMovieViewScrollListener());
     }
 
     @Override
@@ -67,4 +71,35 @@ public class PopularMoviesActivity extends Activity {
     }
 
 
+    private class PopularMovieViewScrollListener implements AbsListView.OnScrollListener, FetchMovieListener {
+        private static final int PAGE_SIZE = 20;
+        private boolean loadingState = false;
+
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            Log.v(TAG, "firstVisibleItem = " + firstVisibleItem + " visibleItemCount = " + visibleItemCount + " totalItemCount = " + totalItemCount);
+            if(firstVisibleItem + visibleItemCount >= totalItemCount) {
+
+                if(!loadingState) {
+                    FetchMovieTask fetchMovieTask = new FetchMovieTask(adapter, sortOrder, this);
+                    fetchMovieTask.execute(totalItemCount/PAGE_SIZE+1);
+                    loadingState = true;
+
+                }
+            }
+
+        }
+
+
+        @Override
+        public void onFetchCompleted() {
+            loadingState = false;
+        }
+    }
 }

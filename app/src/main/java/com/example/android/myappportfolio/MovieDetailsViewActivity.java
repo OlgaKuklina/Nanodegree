@@ -7,16 +7,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class MovieDetailsViewActivity extends Activity {
     private static final String TAG = MovieDetailsViewActivity.class.getSimpleName();
@@ -84,14 +83,32 @@ public class MovieDetailsViewActivity extends Activity {
             if (jObj != null) {
 
                 try {
+                        Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
+                        pic.load(POSTER_BASE_URI + jObj.getString("poster_path"))
+                                .error(R.drawable.no_movies)
+                                .into(moviePoster);
 
-                    Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
-                    pic.load(POSTER_BASE_URI + jObj.getString("poster_path"))
-                            .into(moviePoster);
-                    movieDate.setText(jObj.getString("release_date"));
-                    movieDuration.setText(jObj.getString("runtime"));
-                    movieVoteAverage.setText(jObj.getString("vote_average"));
-                    moviePlot.setText(jObj.getString("overview"));
+                    if(StringUtils.isNotBlank(jObj.getString("release_date"))) {
+                        movieDate.setText(jObj.getString("release_date"));
+                    }else{
+                        movieDate.setText("No release date");
+                    }
+                    if(jObj.get("runtime") != null){
+                        movieDuration.setText(jObj.getString("runtime"));
+                    } else {
+                        movieDuration.setVisibility(View.GONE);
+                    }
+                    if(StringUtils.isNotBlank(jObj.getString("vote_average"))){
+                        movieVoteAverage.setText(jObj.getString("vote_average"));
+                    }
+                    else {
+                        movieVoteAverage.setVisibility(View.GONE);
+                    }
+                    if(StringUtils.isNotBlank(jObj.getString("overview"))){
+                        moviePlot.setText("No overview found");
+                    } else {
+                        moviePlot.setText(jObj.getString("overview"));
+                    }
                     title.setText(jObj.getString("title"));
 
                 } catch (JSONException e) {

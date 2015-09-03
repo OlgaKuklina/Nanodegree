@@ -20,24 +20,26 @@ import java.util.List;
 /**
  * Created by olgakuklina on 2015-08-29.
  */
-class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<MovieData>>{
+class FetchMovieTask extends AsyncTask<Integer, Void, ArrayList<MovieData>>{
     private static final String POSTER_BASE_URI = "http://image.tmdb.org/t/p/w185";
     private static final String TAG = FetchMovieTask.class.getSimpleName();
     private final ImageAdapter adapter;
     private final String sortOrder;
+    private final FetchMovieListener fetchListner;
 
-    FetchMovieTask(ImageAdapter adapter, String sortOrder) {
+    FetchMovieTask(ImageAdapter adapter, String sortOrder, FetchMovieListener fetchListner) {
         this.sortOrder = sortOrder;
         this.adapter = adapter;
+        this.fetchListner = fetchListner;
     }
 
     @Override
-    protected ArrayList<MovieData> doInBackground(Void... params) {
+    protected ArrayList<MovieData> doInBackground(Integer... params) {
         ArrayList<MovieData>  moviePosters = new ArrayList<>();
         try {
 
-            JSONObject jObj = JSONLoader.load("/discover/movie?sort_by=" + sortOrder);
-            Log.v(TAG, "page:" + jObj.getInt("page"));
+            JSONObject jObj = JSONLoader.load("/discover/movie?sort_by=" + sortOrder + "&page=" + params[0]);
+            Log.v(TAG, "page:" + jObj.getInt("page") + "params[0] =" + params[0]);
             JSONArray movieArray = jObj.getJSONArray("results");
             Log.v(TAG,"length:" + movieArray.length());
             for(int i = 0; i < movieArray.length(); i++) {
@@ -63,6 +65,7 @@ class FetchMovieTask extends AsyncTask<Void, Void, ArrayList<MovieData>>{
                 adapter.add(res);
             }
             adapter.notifyDataSetChanged();
+            fetchListner.onFetchCompleted();
         }
 
     }

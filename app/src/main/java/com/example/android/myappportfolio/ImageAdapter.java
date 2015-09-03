@@ -60,6 +60,7 @@ public class ImageAdapter extends BaseAdapter {
 //        pic.setLoggingEnabled(true);
 //        pic.setIndicatorsEnabled(true);
         pic.load(finalMoviePosters.get(position).getMoviePoster())
+                .error(R.drawable.no_movies)
                 .into(imageView);
         return imageView;
     }
