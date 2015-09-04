@@ -83,29 +83,28 @@ public class MovieDetailsViewActivity extends Activity {
             if (jObj != null) {
 
                 try {
-                        Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
-                        pic.load(POSTER_BASE_URI + jObj.getString("poster_path"))
-                                .error(R.drawable.no_movies)
-                                .into(moviePoster);
+                    Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
+                    pic.load(POSTER_BASE_URI + jObj.getString("poster_path"))
+                            .error(R.drawable.no_movies)
+                            .into(moviePoster);
 
-                    if(StringUtils.isNotBlank(jObj.getString("release_date"))) {
+                    if (StringUtils.isNotBlank(jObj.getString("release_date"))) {
                         movieDate.setText(jObj.getString("release_date"));
-                    }else{
-                        movieDate.setText("No release date");
+                    } else {
+                        movieDate.setText(R.string.details_view_no_release_date);
                     }
-                    if(jObj.get("runtime") != null){
-                        movieDuration.setText(jObj.getString("runtime"));
+                    if (jObj.get("runtime") != null) {
+                        movieDuration.setText(jObj.getString("runtime") + getString(R.string.details_view_text_minutes));
                     } else {
                         movieDuration.setVisibility(View.GONE);
                     }
-                    if(StringUtils.isNotBlank(jObj.getString("vote_average"))){
-                        movieVoteAverage.setText(jObj.getString("vote_average"));
-                    }
-                    else {
+                    if (StringUtils.isNotBlank(jObj.getString("vote_average"))) {
+                        movieVoteAverage.setText(jObj.getString("vote_average") + getString(R.string.details_view_text_vote_average_divider));
+                    } else {
                         movieVoteAverage.setVisibility(View.GONE);
                     }
-                    if(StringUtils.isNotBlank(jObj.getString("overview"))){
-                        moviePlot.setText("No overview found");
+                    if (StringUtils.isBlank(jObj.getString("overview"))) {
+                        moviePlot.setText(R.string.details_view_no_description);
                     } else {
                         moviePlot.setText(jObj.getString("overview"));
                     }

@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by olgakuklina on 2015-08-29.
  */
-class FetchMovieTask extends AsyncTask<Integer, Void, ArrayList<MovieData>>{
+class FetchMovieTask extends AsyncTask<Integer, Void, ArrayList<MovieData>> {
     private static final String POSTER_BASE_URI = "http://image.tmdb.org/t/p/w185";
     private static final String TAG = FetchMovieTask.class.getSimpleName();
     private final ImageAdapter adapter;
@@ -35,18 +35,18 @@ class FetchMovieTask extends AsyncTask<Integer, Void, ArrayList<MovieData>>{
 
     @Override
     protected ArrayList<MovieData> doInBackground(Integer... params) {
-        ArrayList<MovieData>  moviePosters = new ArrayList<>();
+        ArrayList<MovieData> moviePosters = new ArrayList<>();
         try {
 
             JSONObject jObj = JSONLoader.load("/discover/movie?sort_by=" + sortOrder + "&page=" + params[0]);
             Log.v(TAG, "page:" + jObj.getInt("page") + "params[0] =" + params[0]);
             JSONArray movieArray = jObj.getJSONArray("results");
-            Log.v(TAG,"length:" + movieArray.length());
-            for(int i = 0; i < movieArray.length(); i++) {
+            Log.v(TAG, "length:" + movieArray.length());
+            for (int i = 0; i < movieArray.length(); i++) {
                 JSONObject movie = movieArray.optJSONObject(i);
                 String moviePoster = movie.getString("poster_path");
                 int movieId = movie.getInt("id");
-                MovieData data = new MovieData(POSTER_BASE_URI + moviePoster,movieId);
+                MovieData data = new MovieData(POSTER_BASE_URI + moviePoster, movieId);
                 moviePosters.add(data);
                 Log.v(TAG, "moviePoster = " + moviePoster);
             }

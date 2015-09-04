@@ -1,85 +1,97 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_background_color"
+    tools:context="com.example.android.myappportfolio.MainActivity">
+
+<RelativeLayout
     style="@style/AppTheme"
-    android:background="#c8ffd7">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
+        android:id="@+id/my_nanodegree"
         style="@style/AppTheme"
-        android:text="@string/my_nanodegree_apps"
-        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="@dimen/main_activity_popular_movies_title_layout_marginLeft"
+        android:layout_marginRight="@dimen/main_activity_popular_movies_title_layout_margin_right"
         android:gravity="center_horizontal"
+        android:text="@string/my_nanodegree_apps"
         android:textColor="@android:color/black"
         android:textSize="@dimen/my_nanodegree_text_size" />
 
     <Button
+        android:id="@+id/popular_movies"
         android:layout_width="@dimen/my_nanodegree_buttons_width"
         android:layout_height="@dimen/my_nanodegree_buttons_height"
+        android:layout_below="@+id/my_nanodegree"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/main_activity_popular_movies_button_layout_margin_top"
+        android:background="@color/main_activity_button_background_color"
         android:text="@string/spotify_streamer"
-        android:id="@+id/button0"
-        android:layout_marginTop="19dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:textColor="#ffffff"
-        android:background="#ffa52d" />
+        android:textColor="@color/main_activity_button_text_color" />
 
     <Button
+        android:id="@+id/scores_app"
         android:layout_width="@dimen/my_nanodegree_buttons_width"
         android:layout_height="@dimen/my_nanodegree_buttons_height"
+        android:layout_below="@+id/popular_movies"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/main_activity_popular_movies_button_layout_margin_top"
+        android:background="@color/main_activity_button_background_color"
         android:text="@string/scores_app"
-        android:id="@+id/button1"
-        android:background="#ffa52d"
-        android:layout_below="@+id/button0"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp" />
+        android:textColor="@color/main_activity_button_text_color" />
 
     <Button
+        android:id="@+id/library_app"
         android:layout_width="@dimen/my_nanodegree_buttons_width"
         android:layout_height="@dimen/my_nanodegree_buttons_height"
+        android:layout_below="@+id/scores_app"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/main_activity_popular_movies_button_layout_margin_top"
+        android:background="@color/main_activity_button_background_color"
         android:text="@string/library_app"
-        android:id="@+id/button2"
-        android:background="#ffa52d"
-        android:layout_below="@+id/button1"
+        android:textColor="@color/main_activity_button_text_color" />
+
+    <Button
+        android:id="@+id/build_it_bigger"
+        android:layout_width="@dimen/my_nanodegree_buttons_width"
+        android:layout_height="@dimen/my_nanodegree_buttons_height"
+        android:layout_below="@+id/library_app"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp" />
-
-    <Button
-        android:layout_width="@dimen/my_nanodegree_buttons_width"
-        android:layout_height="@dimen/my_nanodegree_buttons_height"
+        android:layout_marginTop="@dimen/main_activity_popular_movies_button_layout_margin_top"
+        android:background="@color/main_activity_button_background_color"
         android:text="@string/Build_it_bigger"
-        android:id="@+id/button3"
-        android:background="#ffa52d"
-        android:layout_marginTop="23dp"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true" />
+        android:textColor="@color/main_activity_button_text_color" />
 
     <Button
+        android:id="@+id/bacon_reader"
         android:layout_width="@dimen/my_nanodegree_buttons_width"
         android:layout_height="@dimen/my_nanodegree_buttons_height"
+        android:layout_alignStart="@+id/build_it_bigger"
+        android:layout_below="@+id/build_it_bigger"
+        android:layout_marginTop="@dimen/main_activity_popular_movies_button_layout_margin_top"
+        android:background="@color/main_activity_button_background_color"
         android:text="@string/bacon_reader"
-        android:id="@+id/button4"
-        android:background="#ffa52d"
-        android:layout_marginTop="23dp"
-        android:layout_below="@+id/button3"
-        android:layout_alignStart="@+id/button3" />
+        android:textColor="@color/main_activity_button_text_color" />
 
     <Button
+        android:id="@+id/capstone_my_own_app"
         android:layout_width="@dimen/my_nanodegree_buttons_width"
         android:layout_height="wrap_content"
-        android:text="@string/capstone_myown_app"
-        android:id="@+id/button5"
-        android:background="#ff3255"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/bacon_reader"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="27dp" />
+        android:layout_marginTop="@dimen/main_activity_popular_movies_button_layout_margin_top"
+        android:background="@color/main_activity_button_capstone_background_color"
+        android:text="@string/capstone_my_own_app"
+        android:textColor="@color/main_activity_button_text_color" />
 
 </RelativeLayout>
+</ScrollView>

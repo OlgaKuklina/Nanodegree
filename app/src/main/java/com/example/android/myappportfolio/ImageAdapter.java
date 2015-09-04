@@ -21,11 +21,16 @@ import java.util.ArrayList;
 public class ImageAdapter extends BaseAdapter {
 
     private static final String TAG = ImageAdapter.class.getSimpleName();
+    private static final int IMAGE_WIDTH = 185;
+    private static final int IMAGE_HEIGHT = 278;
     private final ArrayList<MovieData> finalMoviePosters = new ArrayList<>();
+    private final float density;
 
     private final Context mContext;
+
     public ImageAdapter(Context c) {
         mContext = c;
+        density = mContext.getResources().getDisplayMetrics().density;
     }
 
     public int getCount() {
@@ -45,20 +50,14 @@ public class ImageAdapter extends BaseAdapter {
         Log.d(TAG, "position = " + position);
         ImageView imageView;
         if (convertView == null) {
-            // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            float density = mContext.getResources().getDisplayMetrics().density;
-            imageView.setLayoutParams(new GridView.LayoutParams((int)(185 * density), (int)(278 * density)));
+            imageView.setLayoutParams(new GridView.LayoutParams((int) (IMAGE_WIDTH * density), (int) (IMAGE_HEIGHT * density)));
             Log.v(TAG, "density = " + density);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            //imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }
-        //imageView.setImageResource(R.drawable.z);
         Picasso pic = Picasso.with(mContext);
-//        pic.setLoggingEnabled(true);
-//        pic.setIndicatorsEnabled(true);
         pic.load(finalMoviePosters.get(position).getMoviePoster())
                 .error(R.drawable.no_movies)
                 .into(imageView);

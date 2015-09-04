@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class JSONLoader {
     private static final String APP_KEY = "56ffc7a4ba3f6d96ffda5581e83aebce";
-    private static final String MOVIE_BASE_URI ="http://api.themoviedb.org/3";
+    private static final String MOVIE_BASE_URI = "http://api.themoviedb.org/3";
     private static final String TAG = JSONLoader.class.getSimpleName();
 
     public static JSONObject load(String relativeUri) {
@@ -41,16 +41,12 @@ public class JSONLoader {
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
-                // Nothing to do.
                 return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
                 buffer.append(line);
             }
 
@@ -59,7 +55,7 @@ public class JSONLoader {
                 return null;
             }
             movieJsonStr = buffer.toString();
-             Log.v(TAG, "Movie JSON String: " + movieJsonStr);
+            Log.v(TAG, "Movie JSON String: " + movieJsonStr);
             JSONObject jObj = new JSONObject(movieJsonStr);
             return jObj;
 

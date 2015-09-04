@@ -83,12 +83,11 @@ public class PopularMoviesActivity extends Activity {
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            Log.v(TAG, "firstVisibleItem = " + firstVisibleItem + " visibleItemCount = " + visibleItemCount + " totalItemCount = " + totalItemCount);
-            if(firstVisibleItem + visibleItemCount >= totalItemCount) {
+            if (firstVisibleItem + visibleItemCount >= totalItemCount) {
 
-                if(!loadingState) {
+                if (!loadingState) {
                     FetchMovieTask fetchMovieTask = new FetchMovieTask(adapter, sortOrder, this);
-                    fetchMovieTask.execute(totalItemCount/PAGE_SIZE+1);
+                    fetchMovieTask.execute(totalItemCount / PAGE_SIZE + 1);
                     loadingState = true;
 
                 }

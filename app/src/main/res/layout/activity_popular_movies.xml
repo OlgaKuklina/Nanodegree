@@ -2,9 +2,8 @@
     android:id="@+id/gridview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:columnWidth="@dimen/popular_movie_gridview_column_width"
+    android:horizontalSpacing="@dimen/popular_movie_gridview_horizontal_spacing"
     android:numColumns="auto_fit"
-    android:verticalSpacing="1dp"
-    android:horizontalSpacing="1dp"
-    android:columnWidth="150dp"
-    android:stretchMode = "columnWidth"
-    />
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="@dimen/popular_movie_gridview_vertical_spacing" />

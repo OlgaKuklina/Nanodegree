@@ -5,4 +5,41 @@
     <dimen name="my_nanodegree_buttons_width">270dp</dimen>
     <dimen name="my_nanodegree_buttons_height">50dp</dimen>
     <dimen name="my_nanodegree_text_size">16dp</dimen>
+    <dimen name="detail_view_title_padding_left">20dp</dimen>
+    <dimen name="detail_view_title_min_height">100dp</dimen>
+    <dimen name="detail_view_title_text_size">35sp</dimen>
+    <dimen name="detail_view_image_layout_width">120dp</dimen>
+
+    <dimen name="detail_view_image_layout_height">185dp</dimen>
+    <dimen name="detail_view_image_layout_marginTop">10dp</dimen>
+    <dimen name="detail_view_image_layout_marginLeft">20dp</dimen>
+
+
+    <dimen name="detail_text_view_movie_date_text_size">25sp</dimen>
+    <dimen name="detail_text_view_movie_date_paddingTop">10dp</dimen>
+    <dimen name="detail_text_view_movie_date_layout_marginLeft">20dp</dimen>
+
+    <dimen name="detail_text_view_movie_duration_text_size">20sp</dimen>
+    <dimen name="detail_text_view_movie_duration_paddingTop">10dp</dimen>
+    <dimen name="detail_text_view_movie_duration_layout_marginLeft">20dp</dimen>
+
+    <dimen name="detail_text_view_vote_average_text_size">15sp</dimen>
+    <dimen name="detail_text_view_vote_average_paddingTop">10dp</dimen>
+    <dimen name="detail_text_view_vote_average_layout_marginLeft">20dp</dimen>
+
+
+    <dimen name="detail_text_view_movie_plot_text_size">18sp</dimen>
+    <dimen name="detail_text_view_movie_plot_paddingTop">8dp</dimen>
+    <dimen name="detail_text_view_movie_plot_layout_marginLeft">10dp</dimen>
+
+
+    <dimen name="popular_movie_gridview_vertical_spacing">1dp</dimen>
+    <dimen name="popular_movie_gridview_horizontal_spacing">1dp</dimen>
+    <dimen name="popular_movie_gridview_column_width">150dp</dimen>
+
+
+    <dimen name="main_activity_popular_movies_button_layout_margin_top">24dp</dimen>
+    <dimen name="main_activity_popular_movies_title_layout_margin_right">20dp</dimen>
+    <dimen name="main_activity_popular_movies_title_layout_marginLeft">20dp</dimen>
+    layout_marginTop
 </resources>

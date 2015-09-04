@@ -16,25 +16,25 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button0 = (Button) findViewById(R.id.button0);
-        Button button1 = (Button) findViewById(R.id.button1);
-        Button button2 = (Button) findViewById(R.id.button2);
-        Button button3 = (Button) findViewById(R.id.button3);
-        Button button4 = (Button) findViewById(R.id.button4);
-        Button button5 = (Button) findViewById(R.id.button5);
+        Button popularMovies = (Button) findViewById(R.id.popular_movies);
+        Button scoresApp = (Button) findViewById(R.id.scores_app);
+        Button libraryApp = (Button) findViewById(R.id.library_app);
+        Button buildItBigger = (Button) findViewById(R.id.build_it_bigger);
+        Button baconReader = (Button) findViewById(R.id.bacon_reader);
+        Button capstoneMyownApp = (Button) findViewById(R.id.capstone_my_own_app);
 
-        button0.setOnClickListener(new View.OnClickListener() {
+        popularMovies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PopularMoviesActivity.class);
                 startActivity(intent);
             }
         });
-        button1.setOnClickListener(new ButtonOnClickListner(button1.getText()));
-        button2.setOnClickListener(new ButtonOnClickListner(button2.getText()));
-        button3.setOnClickListener(new ButtonOnClickListner(button3.getText()));
-        button4.setOnClickListener(new ButtonOnClickListner(button4.getText()));
-        button5.setOnClickListener(new ButtonOnClickListner(button5.getText()));
+        scoresApp.setOnClickListener(new ButtonOnClickListner(scoresApp.getText()));
+        libraryApp.setOnClickListener(new ButtonOnClickListner(libraryApp.getText()));
+        buildItBigger.setOnClickListener(new ButtonOnClickListner(buildItBigger.getText()));
+        baconReader.setOnClickListener(new ButtonOnClickListner(baconReader.getText()));
+        capstoneMyownApp.setOnClickListener(new ButtonOnClickListner(capstoneMyownApp.getText()));
 
     }
 
@@ -63,12 +63,12 @@ public class MainActivity extends Activity {
     private class ButtonOnClickListner implements View.OnClickListener {
         private final String toastString;
 
-        private ButtonOnClickListner(CharSequence buttonName){
+        private ButtonOnClickListner(CharSequence buttonName) {
             StringBuilder builder = new StringBuilder()
                     .append("This button will lounch my ")
                     .append(buttonName)
                     .append(" app!");
-            toastString =  builder.toString();
+            toastString = builder.toString();
         }
 
         public void onClick(View v) {
