@@ -41,5 +41,5 @@
     <dimen name="main_activity_popular_movies_button_layout_margin_top">24dp</dimen>
     <dimen name="main_activity_popular_movies_title_layout_margin_right">20dp</dimen>
     <dimen name="main_activity_popular_movies_title_layout_marginLeft">20dp</dimen>
-    layout_marginTop
+
 </resources>
