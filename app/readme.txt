@@ -1,0 +1,1 @@
+To make the app work please go to class JSONLoader and add your app key to APP_KEY constant.
