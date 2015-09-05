@@ -67,4 +67,9 @@ public class ImageAdapter extends BaseAdapter {
     public void add(MovieData res) {
         finalMoviePosters.add(res);
     }
+
+    public void clearData() {
+        finalMoviePosters.clear();
+        notifyDataSetChanged();
+    }
 }

@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by olgakuklina on 2015-08-30.
  */
 public class JSONLoader {
-    private static final String APP_KEY = "your app key";
+    private static final String APP_KEY = "56ffc7a4ba3f6d96ffda5581e83aebce";
     private static final String MOVIE_BASE_URI = "http://api.themoviedb.org/3";
     private static final String TAG = JSONLoader.class.getSimpleName();
 

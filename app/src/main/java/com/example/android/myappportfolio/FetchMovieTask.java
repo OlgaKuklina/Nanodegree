@@ -3,6 +3,7 @@ package com.example.android.myappportfolio;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +40,10 @@ class FetchMovieTask extends AsyncTask<Integer, Void, ArrayList<MovieData>> {
         try {
 
             JSONObject jObj = JSONLoader.load("/discover/movie?sort_by=" + sortOrder + "&page=" + params[0]);
+            if(jObj == null) {
+                Log.w(TAG, "Can not load the data from remote service");
+                return null;
+            }
             Log.v(TAG, "page:" + jObj.getInt("page") + "params[0] =" + params[0]);
             JSONArray movieArray = jObj.getJSONArray("results");
             Log.v(TAG, "length:" + movieArray.length());
@@ -66,6 +71,8 @@ class FetchMovieTask extends AsyncTask<Integer, Void, ArrayList<MovieData>> {
             }
             adapter.notifyDataSetChanged();
             fetchListner.onFetchCompleted();
+        } else {
+            fetchListner.onFetchFailed();
         }
 
     }

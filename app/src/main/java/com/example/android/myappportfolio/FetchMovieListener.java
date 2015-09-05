@@ -5,4 +5,5 @@ package com.example.android.myappportfolio;
  */
 public interface FetchMovieListener {
     void onFetchCompleted();
+    void onFetchFailed();
 }

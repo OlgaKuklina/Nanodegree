@@ -22,5 +22,7 @@
     <string name="details_view_no_description">No description</string>
     <string name="details_view_text_minutes">min</string>
     <string name="details_view_text_vote_average_divider">/10</string>
+    <string name="popular_movies_activity_text_conection_error">Can not load the data from remote service</string>
+    <string name="network_not_available_message">Network is not available</string>
 
 </resources>
