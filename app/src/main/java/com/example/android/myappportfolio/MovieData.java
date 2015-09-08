@@ -1,5 +1,9 @@
 package com.example.android.myappportfolio;
 
+import android.net.Uri;
+
+import java.util.List;
+
 /**
  * Created by olgakuklina on 2015-08-30.
  */

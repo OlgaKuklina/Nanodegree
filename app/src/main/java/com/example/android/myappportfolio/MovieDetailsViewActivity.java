@@ -2,6 +2,7 @@ package com.example.android.myappportfolio;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,13 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieDetailsViewActivity extends Activity {
     private static final String TAG = MovieDetailsViewActivity.class.getSimpleName();
@@ -25,6 +32,7 @@ public class MovieDetailsViewActivity extends Activity {
     private TextView movieVoteAverage;
     private TextView moviePlot;
     private TextView title;
+    private LinearLayout trailerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +45,34 @@ public class MovieDetailsViewActivity extends Activity {
         movieVoteAverage = (TextView) findViewById(R.id.vote_average);
         moviePlot = (TextView) findViewById(R.id.movie_plot);
         title = (TextView) findViewById(R.id.title);
+        trailerList = (LinearLayout) findViewById(R.id.movie_trailers);
+
+
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
             int id = intent.getIntExtra(Intent.EXTRA_TEXT, -1);
             FetchDetailsMovieTask task = new FetchDetailsMovieTask();
             task.execute(id);
+            FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
+            tTask.execute(id);
         }
+
     }
 
+    private void populateTrailerList(List<TrailerData> data) {
+        for (final TrailerData trailer : data) {
+            View view = getLayoutInflater().inflate(R.layout.movie_trailer_list_item, null);
+            TextView tralerName = (TextView) view.findViewById(R.id.trailer_name);
+            tralerName.setText(trailer.getTrailerName());
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, trailer.getTrailerUri()));
+                }
+            });
+            trailerList.addView(view);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -118,4 +146,33 @@ public class MovieDetailsViewActivity extends Activity {
         }
     }
 
+    private class FetchTrailerMovieTask extends AsyncTask<Integer, Void, JSONObject> {
+        private static final String TRAILER_BASE_URI = "http://www.youtube.com/watch?v=";
+
+        @Override
+        protected JSONObject doInBackground(Integer... params) {
+            JSONObject jObj = JSONLoader.load("/movie/" + params[0] + "/videos");
+
+            return jObj;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jObj) {
+            super.onPostExecute(jObj);
+            if (jObj != null) {
+                List<TrailerData> trailerData = new ArrayList<TrailerData>();
+                try {
+                    JSONArray array = jObj.getJSONArray("results");
+                    for(int i = 0; i<array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+                        trailerData.add(new TrailerData(Uri.parse(TRAILER_BASE_URI + object.getString("key")), object.getString("name")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "", e);
+                }
+                populateTrailerList(trailerData);
+            }
+
+        }
+    }
 }
