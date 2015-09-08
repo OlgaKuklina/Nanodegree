@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:minHeight="@dimen/detail_text_view_review_list_item_minSize"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/review_author"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fontFamily="Arial"
+        android:paddingLeft="@dimen/detail_text_view_review_author_paddingLeft"
+        android:paddingTop="@dimen/detail_text_view_review_author_paddingTop"
+        android:textColor="@color/detail_view_review_author_text_color"
+        android:textSize="@dimen/detail_text_view_review_author_text_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/review_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fontFamily="Arial"
+        android:paddingLeft="@dimen/detail_text_view_review_content_paddingLeft"
+        android:paddingTop="@dimen/detail_text_view_review_content_paddingTop"
+        android:textColor="@color/detail_view_movie_details_text_color"
+        android:textSize="@dimen/detail_text_view_review_content_text_size"
+        android:textStyle="italic" />
+</LinearLayout>

@@ -42,4 +42,19 @@
     <dimen name="main_activity_popular_movies_title_layout_margin_right">20dp</dimen>
     <dimen name="main_activity_popular_movies_title_layout_marginLeft">20dp</dimen>
 
+
+
+    <dimen name="detail_text_view_review_list_item_minSize">100dp</dimen>
+    <dimen name="detail_text_view_trailer_list_item_minSize">100dp</dimen>
+
+    <dimen name="detail_text_view_trailer_image_view_layout_width">100dp</dimen>
+
+    <dimen name="detail_text_view_trailer_image_view_layout_height">100dp</dimen>
+    <dimen name="detail_text_view_review_author_paddingTop">8dp</dimen>
+    <dimen name="detail_text_view_review_author_text_size">15sp</dimen>
+    <dimen name="detail_text_view_review_author_paddingLeft">8dp</dimen>
+    <dimen name="detail_text_view_review_content_paddingTop">8dp</dimen>
+    <dimen name="detail_text_view_review_content_text_size">15sp</dimen>
+    <dimen name="detail_text_view_review_content_paddingLeft">8dp</dimen>
+
 </resources>

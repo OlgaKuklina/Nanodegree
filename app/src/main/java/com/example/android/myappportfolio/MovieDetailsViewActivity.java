@@ -33,7 +33,7 @@ public class MovieDetailsViewActivity extends Activity {
     private TextView moviePlot;
     private TextView title;
     private LinearLayout trailerList;
-
+    private LinearLayout reviewList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +46,7 @@ public class MovieDetailsViewActivity extends Activity {
         moviePlot = (TextView) findViewById(R.id.movie_plot);
         title = (TextView) findViewById(R.id.title);
         trailerList = (LinearLayout) findViewById(R.id.movie_trailers);
-
+        reviewList = (LinearLayout) findViewById(R.id.movie_reviews);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
@@ -55,6 +55,8 @@ public class MovieDetailsViewActivity extends Activity {
             task.execute(id);
             FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
             tTask.execute(id);
+            FetchReviewMovieTask rTask = new FetchReviewMovieTask();
+            rTask.execute(id);
         }
 
     }
@@ -73,6 +75,18 @@ public class MovieDetailsViewActivity extends Activity {
             trailerList.addView(view);
         }
     }
+
+    private void populateReviewList(List<ReviewData> data) {
+        for (final ReviewData review : data) {
+            View view = getLayoutInflater().inflate(R.layout.movie_review_list_item, null);
+            TextView reviewAuthor = (TextView) view.findViewById(R.id.review_author);
+            reviewAuthor.setText(review.getReviewAuthor());
+            TextView reviewContent = (TextView) view.findViewById(R.id.review_content);
+            reviewContent.setText(review.getReviewContent());
+            reviewList.addView(view);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -171,6 +185,36 @@ public class MovieDetailsViewActivity extends Activity {
                     Log.e(TAG, "", e);
                 }
                 populateTrailerList(trailerData);
+            }
+
+        }
+    }
+
+    private class FetchReviewMovieTask extends AsyncTask<Integer, Void, JSONObject> {
+        private static final String TRAILER_BASE_URI = "http://www.youtube.com/watch?v=";
+
+        @Override
+        protected JSONObject doInBackground(Integer... params) {
+            JSONObject jObj = JSONLoader.load("/movie/" + params[0] + "/reviews");
+
+            return jObj;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jObj) {
+            super.onPostExecute(jObj);
+            if (jObj != null) {
+                List<ReviewData> reviewData  = new ArrayList<ReviewData>();
+                try {
+                    JSONArray array = jObj.getJSONArray("results");
+                    for(int i = 0; i<array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+                        reviewData.add(new ReviewData(object.getString("author"), object.getString("content")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "", e);
+                }
+                populateReviewList(reviewData);
             }
 
         }

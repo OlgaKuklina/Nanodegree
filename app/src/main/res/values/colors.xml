@@ -10,4 +10,5 @@
     <color name="main_activity_button_background_color">#FFFFA52D</color>
     <color name="main_activity_button_capstone_background_color">#FFFF3255</color>
 
+    <color name= "detail_view_review_author_text_color">#FF000000</color>
 </resources>
