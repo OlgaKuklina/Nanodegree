@@ -46,6 +46,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.myappportfolio.PopularMoviesActivity" />
         </activity>
+
+        <provider
+            android:name=".FavoriteMovieCollectionProvider"
+            android:authorities="com.example.popularmovies.provider"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
     </application>
 
 </manifest>

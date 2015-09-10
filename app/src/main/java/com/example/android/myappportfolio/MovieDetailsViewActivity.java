@@ -1,7 +1,10 @@
 package com.example.android.myappportfolio;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,8 +28,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_DURATION;
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_MOVIE_PLOT;
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_NAME_MOVIE_ID;
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_NAME_TITLE;
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_POSTER_PATH;
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_VOTE_AVERAGE;
+import static com.example.android.myappportfolio.FavoriteMoviesContract.FavoriteMovieColumn.COLUMN_YEAR;
+
 public class MovieDetailsViewActivity extends Activity {
     private static final String TAG = MovieDetailsViewActivity.class.getSimpleName();
+    private static final Uri URI = Uri.parse("content://com.example.popularmovies.provider/favorite");
     private ImageView moviePoster;
     private TextView movieDate;
     private TextView movieDuration;
@@ -34,6 +47,10 @@ public class MovieDetailsViewActivity extends Activity {
     private TextView title;
     private LinearLayout trailerList;
     private LinearLayout reviewList;
+    private Button markAsFavButton;
+    private Button deleteFromFavButton;
+    private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +64,12 @@ public class MovieDetailsViewActivity extends Activity {
         title = (TextView) findViewById(R.id.title);
         trailerList = (LinearLayout) findViewById(R.id.movie_trailers);
         reviewList = (LinearLayout) findViewById(R.id.movie_reviews);
+        markAsFavButton = (Button) findViewById(R.id.mark_as_fav_button);
+        deleteFromFavButton = (Button) findViewById(R.id.delete_from_fav_button);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            int id = intent.getIntExtra(Intent.EXTRA_TEXT, -1);
+            id = intent.getIntExtra(Intent.EXTRA_TEXT, -1);
             FetchDetailsMovieTask task = new FetchDetailsMovieTask();
             task.execute(id);
             FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
@@ -58,7 +77,21 @@ public class MovieDetailsViewActivity extends Activity {
             FetchReviewMovieTask rTask = new FetchReviewMovieTask();
             rTask.execute(id);
         }
+        Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[] {COLUMN_NAME_MOVIE_ID}, null, null, null);
+        if(cursor.getCount() != 0) {
+            deleteFromFavButton.setVisibility(View.VISIBLE);
+        } else {
+            markAsFavButton.setVisibility(View.VISIBLE);
+        }
 
+        deleteFromFavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MovieDetailsViewActivity.this.getContentResolver().delete(URI, COLUMN_NAME_MOVIE_ID + " = ?", new String[] {Integer.toString(id)});
+                markAsFavButton.setVisibility(View.VISIBLE);
+                deleteFromFavButton.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void populateTrailerList(List<TrailerData> data) {
@@ -120,7 +153,7 @@ public class MovieDetailsViewActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(JSONObject jObj) {
+        protected void onPostExecute(final JSONObject jObj) {
             super.onPostExecute(jObj);
             if (jObj != null) {
 
@@ -154,6 +187,43 @@ public class MovieDetailsViewActivity extends Activity {
 
                 } catch (JSONException e) {
                     Log.e(TAG, "", e);
+                }
+
+                markAsFavButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ContentValues values = new ContentValues();
+                        values.put(COLUMN_NAME_MOVIE_ID, id);
+                        try {
+                            values.put(COLUMN_DURATION, jObj.getInt("runtime"));
+                            values.put(COLUMN_MOVIE_PLOT, jObj.getString("overview"));
+                            values.put(COLUMN_NAME_TITLE, jObj.getString("title"));
+                            values.put(COLUMN_POSTER_PATH, jObj.getString("poster_path"));
+                            values.put(COLUMN_VOTE_AVERAGE, jObj.getDouble("vote_average"));
+                            values.put(COLUMN_YEAR, jObj.getString("release_date"));
+                        } catch (JSONException e) {
+                            Log.e(TAG, "", e);
+                        }
+                        MovieDetailsViewActivity.this.getContentResolver().insert(URI, values);
+                        markAsFavButton.setVisibility(View.GONE);
+                        deleteFromFavButton.setVisibility(View.VISIBLE);
+                    }
+                });
+            } else {
+
+                Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[] {COLUMN_DURATION, COLUMN_YEAR, COLUMN_MOVIE_PLOT, COLUMN_NAME_TITLE, COLUMN_POSTER_PATH, COLUMN_VOTE_AVERAGE }, null, null, null);
+                if(cursor.getCount() != 0) {
+
+                    cursor.moveToFirst();
+                    movieDuration.setText(cursor.getInt(0) + getString(R.string.details_view_text_minutes));
+                    movieDate.setText(cursor.getString(1));
+                    moviePlot.setText(cursor.getString(2));
+                    title.setText(cursor.getString(3));
+                    Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
+                    pic.load(POSTER_BASE_URI + cursor.getString(4))
+                            .error(R.drawable.no_movies)
+                            .into(moviePoster);
+                    movieVoteAverage.setText(cursor.getString(5) + getString(R.string.details_view_text_vote_average_divider));
                 }
             }
 

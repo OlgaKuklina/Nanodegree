@@ -74,6 +74,29 @@
                     android:text="movie_vote_average"
                     android:textColor="@color/detail_view_vote_average_text_color"
                     android:textSize="@dimen/detail_text_view_vote_average_text_size" />
+
+                <Button
+                    android:id="@+id/mark_as_fav_button"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/detail_view_star_button_color"
+                    android:textColor="@color/detail_view_movie_details_text_color"
+                    android:text="MARK AS FAVORITE"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/delete_from_fav_button"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/detail_view_star_button_color"
+                    android:textColor="@color/detail_view_movie_details_text_color"
+                    android:text="DELETE FROM FAVORITE"
+                    android:visibility="gone"/>
+
             </LinearLayout>
         </LinearLayout>
 
