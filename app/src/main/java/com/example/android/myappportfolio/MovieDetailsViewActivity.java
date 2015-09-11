@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -54,6 +55,7 @@ public class MovieDetailsViewActivity extends Activity {
     private Button markAsFavButton;
     private Button deleteFromFavButton;
     private int id;
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +119,14 @@ public class MovieDetailsViewActivity extends Activity {
                 }
             });
             trailerList.addView(view);
+
         }
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("video/*");
+        Uri uri = trailerData.get(0).getTrailerUri();
+        Log.v(TAG, "trailerData.get(0) = " + trailerData.get(0).getTrailerUri());
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        mShareActionProvider.setShareIntent(shareIntent);
     }
 
     private void populateReviewList(List<ReviewData> data) {
@@ -180,9 +189,18 @@ public class MovieDetailsViewActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_movie_details_view, menu);
+        getMenuInflater().inflate(R.menu.menu_movie_details, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
+        // Return true to display menu
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -190,6 +208,8 @@ public class MovieDetailsViewActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        Log.v(TAG, "we are here");
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
