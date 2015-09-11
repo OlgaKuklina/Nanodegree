@@ -77,8 +77,8 @@ public class MovieDetailsViewActivity extends Activity {
             FetchReviewMovieTask rTask = new FetchReviewMovieTask();
             rTask.execute(id);
         }
-        Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[] {COLUMN_NAME_MOVIE_ID}, null, null, null);
-        if(cursor.getCount() != 0) {
+        Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[]{COLUMN_NAME_MOVIE_ID}, null, null, null);
+        if (cursor.getCount() != 0) {
             deleteFromFavButton.setVisibility(View.VISIBLE);
         } else {
             markAsFavButton.setVisibility(View.VISIBLE);
@@ -87,7 +87,7 @@ public class MovieDetailsViewActivity extends Activity {
         deleteFromFavButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MovieDetailsViewActivity.this.getContentResolver().delete(URI, COLUMN_NAME_MOVIE_ID + " = ?", new String[] {Integer.toString(id)});
+                MovieDetailsViewActivity.this.getContentResolver().delete(URI, COLUMN_NAME_MOVIE_ID + " = ?", new String[]{Integer.toString(id)});
                 markAsFavButton.setVisibility(View.VISIBLE);
                 deleteFromFavButton.setVisibility(View.GONE);
             }
@@ -211,8 +211,9 @@ public class MovieDetailsViewActivity extends Activity {
                 });
             } else {
 
-                Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[] {COLUMN_DURATION, COLUMN_YEAR, COLUMN_MOVIE_PLOT, COLUMN_NAME_TITLE, COLUMN_POSTER_PATH, COLUMN_VOTE_AVERAGE }, null, null, null);
-                if(cursor.getCount() != 0) {
+                final Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[]{COLUMN_DURATION, COLUMN_YEAR, COLUMN_MOVIE_PLOT, COLUMN_NAME_TITLE, COLUMN_POSTER_PATH, COLUMN_VOTE_AVERAGE}, null, null, null);
+                Log.d(TAG, "Cursor = " + cursor.getCount());
+                if (cursor.getCount() != 0) {
 
                     cursor.moveToFirst();
                     movieDuration.setText(cursor.getInt(0) + getString(R.string.details_view_text_minutes));
@@ -224,9 +225,25 @@ public class MovieDetailsViewActivity extends Activity {
                             .error(R.drawable.no_movies)
                             .into(moviePoster);
                     movieVoteAverage.setText(cursor.getString(5) + getString(R.string.details_view_text_vote_average_divider));
+                    markAsFavButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ContentValues values = new ContentValues();
+                            values.put(COLUMN_NAME_MOVIE_ID, id);
+                            values.put(COLUMN_DURATION, cursor.getInt(0));
+                            values.put(COLUMN_MOVIE_PLOT, cursor.getString(2));
+                            values.put(COLUMN_NAME_TITLE, cursor.getString(3));
+                            values.put(COLUMN_POSTER_PATH, cursor.getString(4));
+                            values.put(COLUMN_VOTE_AVERAGE, cursor.getString(5));
+                            values.put(COLUMN_YEAR, cursor.getString(1));
+                            MovieDetailsViewActivity.this.getContentResolver().insert(URI, values);
+                            markAsFavButton.setVisibility(View.GONE);
+                            deleteFromFavButton.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
-            }
 
+            }
         }
     }
 
@@ -247,7 +264,7 @@ public class MovieDetailsViewActivity extends Activity {
                 List<TrailerData> trailerData = new ArrayList<TrailerData>();
                 try {
                     JSONArray array = jObj.getJSONArray("results");
-                    for(int i = 0; i<array.length(); i++) {
+                    for (int i = 0; i < array.length(); i++) {
                         JSONObject object = array.getJSONObject(i);
                         trailerData.add(new TrailerData(Uri.parse(TRAILER_BASE_URI + object.getString("key")), object.getString("name")));
                     }
@@ -274,10 +291,10 @@ public class MovieDetailsViewActivity extends Activity {
         protected void onPostExecute(JSONObject jObj) {
             super.onPostExecute(jObj);
             if (jObj != null) {
-                List<ReviewData> reviewData  = new ArrayList<ReviewData>();
+                List<ReviewData> reviewData = new ArrayList<ReviewData>();
                 try {
                     JSONArray array = jObj.getJSONArray("results");
-                    for(int i = 0; i<array.length(); i++) {
+                    for (int i = 0; i < array.length(); i++) {
                         JSONObject object = array.getJSONObject(i);
                         reviewData.add(new ReviewData(object.getString("author"), object.getString("content")));
                     }

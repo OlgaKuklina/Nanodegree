@@ -31,7 +31,7 @@ public class JSONLoader {
             Uri builtUri = Uri.parse(MOVIE_BASE_URI + relativeUri).buildUpon()
                     .appendQueryParameter("api_key", APP_KEY).build();
             URL url = new URL(builtUri.toString());
-            Log.v(TAG, "Built URI" + builtUri.toString());
+            Log.v(TAG, "Built URI " + builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");

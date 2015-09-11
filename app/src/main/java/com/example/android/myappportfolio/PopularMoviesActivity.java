@@ -50,23 +50,30 @@ public class PopularMoviesActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        SharedPreferences prefs = this.getSharedPreferences(SHARED_PREF_NAME, 0);
+        String sortOrderUpdate;
+        sortOrderUpdate = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
+        Log.d(TAG, "sortOrderUpdate = " + sortOrderUpdate);
+
         boolean isConnected = checkInternetConnection();
         Log.v(TAG, "Network is" + isConnected);
-        if (!isConnected) {
+        if (!isConnected && !sortOrderUpdate.equals("favorites")) {
             Log.e(TAG, "Network is not available");
 
             Toast toast = Toast.makeText(getApplicationContext(), R.string.network_not_available_message, Toast.LENGTH_LONG);
             toast.show();
             return;
         }
-        SharedPreferences prefs = this.getSharedPreferences(SHARED_PREF_NAME, 0);
-        String sortOrderUpdate;
-        sortOrderUpdate = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
-        Log.d(TAG, "sortOrderUpdate = " + sortOrderUpdate);
-        if(!sortOrderUpdate.equals(sortOrder)) {
+
+        if(!sortOrderUpdate.equals(sortOrder) || sortOrderUpdate.equals("favorites")) {
             sortOrder = sortOrderUpdate;
             adapter.clearData();
-            gridview.setOnScrollListener(new PopularMovieViewScrollListener());
+            if(sortOrderUpdate.equals("favorites")){
+                FetchFavoriteMovieTask task = new FetchFavoriteMovieTask(adapter, getContentResolver());
+                task.execute();
+            } else {
+                gridview.setOnScrollListener(new PopularMovieViewScrollListener());
+            }
         }
     }
 
