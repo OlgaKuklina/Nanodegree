@@ -39,6 +39,10 @@ import static com.example.android.myappportfolio.FavoriteMoviesContract.Favorite
 public class MovieDetailsViewActivity extends Activity {
     private static final String TAG = MovieDetailsViewActivity.class.getSimpleName();
     private static final Uri URI = Uri.parse("content://com.example.popularmovies.provider/favorite");
+    private static final String POSTER_BASE_URI = "http://image.tmdb.org/t/p/w185";
+    private MovieDataContainer movieDataContainer;
+    private List<TrailerData> trailerData;
+    private List<ReviewData> reviewData;
     private ImageView moviePoster;
     private TextView movieDate;
     private TextView movieDuration;
@@ -70,12 +74,19 @@ public class MovieDetailsViewActivity extends Activity {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
             id = intent.getIntExtra(Intent.EXTRA_TEXT, -1);
-            FetchDetailsMovieTask task = new FetchDetailsMovieTask();
-            task.execute(id);
-            FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
-            tTask.execute(id);
-            FetchReviewMovieTask rTask = new FetchReviewMovieTask();
-            rTask.execute(id);
+            MovieDetailsViewActivityState state = (MovieDetailsViewActivityState) getLastNonConfigurationInstance();
+            if (state == null) {
+                FetchDetailsMovieTask task = new FetchDetailsMovieTask();
+                task.execute(id);
+                FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
+                tTask.execute(id);
+                FetchReviewMovieTask rTask = new FetchReviewMovieTask();
+                rTask.execute(id);
+            } else {
+                populateDetailsViewData(movieDataContainer = state.getMovieDataContainer());
+                populateReviewList(reviewData = state.getReviewDatas());
+                populateTrailerList(trailerData = state.getTrailerDatas());
+            }
         }
         Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[]{COLUMN_NAME_MOVIE_ID}, null, null, null);
         if (cursor.getCount() != 0) {
@@ -120,6 +131,52 @@ public class MovieDetailsViewActivity extends Activity {
         }
     }
 
+    private void populateDetailsViewData(final MovieDataContainer container) {
+        Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
+        pic.load(POSTER_BASE_URI + container.getMoviePoster())
+                .error(R.drawable.no_movies)
+                .into(moviePoster);
+
+        if (StringUtils.isNotBlank(container.getYear())) {
+            movieDate.setText(container.getYear());
+        } else {
+            movieDate.setText(R.string.details_view_no_release_date);
+        }
+        if (container.getDuration() != null) {
+            movieDuration.setText(container.getDuration() + getString(R.string.details_view_text_minutes));
+        } else {
+            movieDuration.setVisibility(View.GONE);
+        }
+        if (container.getVoteaverage() != null) {
+            movieVoteAverage.setText(container.getVoteaverage() + getString(R.string.details_view_text_vote_average_divider));
+        } else {
+            movieVoteAverage.setVisibility(View.GONE);
+        }
+        if (StringUtils.isBlank(container.getPlot())) {
+            moviePlot.setText(R.string.details_view_no_description);
+        } else {
+            moviePlot.setText(container.getPlot());
+        }
+        title.setText(container.getTitle());
+
+        markAsFavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_NAME_MOVIE_ID, id);
+                values.put(COLUMN_DURATION, container.getDuration());
+                values.put(COLUMN_MOVIE_PLOT, container.getPlot());
+                values.put(COLUMN_NAME_TITLE, container.getTitle());
+                values.put(COLUMN_POSTER_PATH, container.getMoviePoster());
+                values.put(COLUMN_VOTE_AVERAGE, container.getVoteaverage());
+                values.put(COLUMN_YEAR, container.getYear());
+                MovieDetailsViewActivity.this.getContentResolver().insert(URI, values);
+                markAsFavButton.setVisibility(View.GONE);
+                deleteFromFavButton.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -142,8 +199,13 @@ public class MovieDetailsViewActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        Log.d(TAG, "In onRetainNonConfigurationInstance = ");
+        return new MovieDetailsViewActivityState(trailerData, reviewData, movieDataContainer);
+    }
+
     private class FetchDetailsMovieTask extends AsyncTask<Integer, Void, JSONObject> {
-        private static final String POSTER_BASE_URI = "http://image.tmdb.org/t/p/w185";
 
         @Override
         protected JSONObject doInBackground(Integer... params) {
@@ -156,59 +218,14 @@ public class MovieDetailsViewActivity extends Activity {
         protected void onPostExecute(final JSONObject jObj) {
             super.onPostExecute(jObj);
             if (jObj != null) {
-
                 try {
-                    Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
-                    pic.load(POSTER_BASE_URI + jObj.getString("poster_path"))
-                            .error(R.drawable.no_movies)
-                            .into(moviePoster);
-
-                    if (StringUtils.isNotBlank(jObj.getString("release_date"))) {
-                        movieDate.setText(jObj.getString("release_date"));
-                    } else {
-                        movieDate.setText(R.string.details_view_no_release_date);
-                    }
-                    if (jObj.get("runtime") != null) {
-                        movieDuration.setText(jObj.getString("runtime") + getString(R.string.details_view_text_minutes));
-                    } else {
-                        movieDuration.setVisibility(View.GONE);
-                    }
-                    if (StringUtils.isNotBlank(jObj.getString("vote_average"))) {
-                        movieVoteAverage.setText(jObj.getString("vote_average") + getString(R.string.details_view_text_vote_average_divider));
-                    } else {
-                        movieVoteAverage.setVisibility(View.GONE);
-                    }
-                    if (StringUtils.isBlank(jObj.getString("overview"))) {
-                        moviePlot.setText(R.string.details_view_no_description);
-                    } else {
-                        moviePlot.setText(jObj.getString("overview"));
-                    }
-                    title.setText(jObj.getString("title"));
+                    movieDataContainer = new MovieDataContainer(jObj.getString("poster_path"), id, jObj.getString("title"), jObj.getString("overview"), jObj.getString("release_date"), jObj.getInt("runtime"), jObj.getDouble("vote_average"));
+                    populateDetailsViewData(movieDataContainer);
 
                 } catch (JSONException e) {
                     Log.e(TAG, "", e);
                 }
 
-                markAsFavButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ContentValues values = new ContentValues();
-                        values.put(COLUMN_NAME_MOVIE_ID, id);
-                        try {
-                            values.put(COLUMN_DURATION, jObj.getInt("runtime"));
-                            values.put(COLUMN_MOVIE_PLOT, jObj.getString("overview"));
-                            values.put(COLUMN_NAME_TITLE, jObj.getString("title"));
-                            values.put(COLUMN_POSTER_PATH, jObj.getString("poster_path"));
-                            values.put(COLUMN_VOTE_AVERAGE, jObj.getDouble("vote_average"));
-                            values.put(COLUMN_YEAR, jObj.getString("release_date"));
-                        } catch (JSONException e) {
-                            Log.e(TAG, "", e);
-                        }
-                        MovieDetailsViewActivity.this.getContentResolver().insert(URI, values);
-                        markAsFavButton.setVisibility(View.GONE);
-                        deleteFromFavButton.setVisibility(View.VISIBLE);
-                    }
-                });
             } else {
 
                 final Cursor cursor = MovieDetailsViewActivity.this.getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[]{COLUMN_DURATION, COLUMN_YEAR, COLUMN_MOVIE_PLOT, COLUMN_NAME_TITLE, COLUMN_POSTER_PATH, COLUMN_VOTE_AVERAGE}, null, null, null);
@@ -216,31 +233,8 @@ public class MovieDetailsViewActivity extends Activity {
                 if (cursor.getCount() != 0) {
 
                     cursor.moveToFirst();
-                    movieDuration.setText(cursor.getInt(0) + getString(R.string.details_view_text_minutes));
-                    movieDate.setText(cursor.getString(1));
-                    moviePlot.setText(cursor.getString(2));
-                    title.setText(cursor.getString(3));
-                    Picasso pic = Picasso.with(MovieDetailsViewActivity.this);
-                    pic.load(POSTER_BASE_URI + cursor.getString(4))
-                            .error(R.drawable.no_movies)
-                            .into(moviePoster);
-                    movieVoteAverage.setText(cursor.getString(5) + getString(R.string.details_view_text_vote_average_divider));
-                    markAsFavButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ContentValues values = new ContentValues();
-                            values.put(COLUMN_NAME_MOVIE_ID, id);
-                            values.put(COLUMN_DURATION, cursor.getInt(0));
-                            values.put(COLUMN_MOVIE_PLOT, cursor.getString(2));
-                            values.put(COLUMN_NAME_TITLE, cursor.getString(3));
-                            values.put(COLUMN_POSTER_PATH, cursor.getString(4));
-                            values.put(COLUMN_VOTE_AVERAGE, cursor.getString(5));
-                            values.put(COLUMN_YEAR, cursor.getString(1));
-                            MovieDetailsViewActivity.this.getContentResolver().insert(URI, values);
-                            markAsFavButton.setVisibility(View.GONE);
-                            deleteFromFavButton.setVisibility(View.VISIBLE);
-                        }
-                    });
+                    movieDataContainer = new MovieDataContainer(cursor.getString(4), id, cursor.getString(3), cursor.getString(2), cursor.getString(1), cursor.getInt(0), cursor.getDouble(5));
+                    populateDetailsViewData(movieDataContainer);
                 }
 
             }
@@ -261,7 +255,7 @@ public class MovieDetailsViewActivity extends Activity {
         protected void onPostExecute(JSONObject jObj) {
             super.onPostExecute(jObj);
             if (jObj != null) {
-                List<TrailerData> trailerData = new ArrayList<TrailerData>();
+                trailerData = new ArrayList<TrailerData>();
                 try {
                     JSONArray array = jObj.getJSONArray("results");
                     for (int i = 0; i < array.length(); i++) {
@@ -291,7 +285,7 @@ public class MovieDetailsViewActivity extends Activity {
         protected void onPostExecute(JSONObject jObj) {
             super.onPostExecute(jObj);
             if (jObj != null) {
-                List<ReviewData> reviewData = new ArrayList<ReviewData>();
+                reviewData = new ArrayList<ReviewData>();
                 try {
                     JSONArray array = jObj.getJSONArray("results");
                     for (int i = 0; i < array.length(); i++) {

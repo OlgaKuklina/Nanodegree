@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class PopularMoviesActivity extends Activity {
     private static final String TAG = PopularMoviesActivity.class.getSimpleName();
     private static final String SHARED_PREF_NAME = "com.example.android.myappportfolio.popular.movies";
@@ -31,7 +33,14 @@ public class PopularMoviesActivity extends Activity {
         Log.d(TAG, "Hi");
         gridview = (GridView) findViewById(R.id.gridview);
         adapter = new ImageAdapter(this);
+        PopularMoviesActivityState state = (PopularMoviesActivityState)getLastNonConfigurationInstance();
+        Log.d(TAG," state = " + state);
+        if(state != null) {
+            adapter.addAll(state.getMovieDatas());
+            sortOrder = state.getSortOrder();
+        }
         gridview.setAdapter(adapter);
+
 
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -53,7 +62,7 @@ public class PopularMoviesActivity extends Activity {
         SharedPreferences prefs = this.getSharedPreferences(SHARED_PREF_NAME, 0);
         String sortOrderUpdate;
         sortOrderUpdate = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
-        Log.d(TAG, "sortOrderUpdate = " + sortOrderUpdate);
+        Log.d(TAG, "sortOrderUpdate = " + sortOrderUpdate + ", sortOrder = " + sortOrder);
 
         boolean isConnected = checkInternetConnection();
         Log.v(TAG, "Network is" + isConnected);
@@ -71,9 +80,10 @@ public class PopularMoviesActivity extends Activity {
             if(sortOrderUpdate.equals("favorites")){
                 FetchFavoriteMovieTask task = new FetchFavoriteMovieTask(adapter, getContentResolver());
                 task.execute();
-            } else {
-                gridview.setOnScrollListener(new PopularMovieViewScrollListener());
             }
+        }
+        if(!sortOrderUpdate.equals("favorites")) {
+            gridview.setOnScrollListener(new PopularMovieViewScrollListener());
         }
     }
 
@@ -109,6 +119,12 @@ public class PopularMoviesActivity extends Activity {
                 activeNetwork.isConnectedOrConnecting();
 
         return isConnected;
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        Log.d(TAG, "In onRetainNonConfigurationInstance = ");
+        return new PopularMoviesActivityState(sortOrder, adapter.getMovieData());
     }
 
 

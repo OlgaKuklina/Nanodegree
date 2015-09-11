@@ -14,6 +14,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by olgakuklina on 2015-08-25.
@@ -68,8 +69,15 @@ public class ImageAdapter extends BaseAdapter {
         finalMoviePosters.add(res);
     }
 
+    public void addAll(List<MovieData> res) {
+        finalMoviePosters.addAll(res);
+    }
+
     public void clearData() {
         finalMoviePosters.clear();
         notifyDataSetChanged();
+    }
+    public List<MovieData> getMovieData() {
+        return finalMoviePosters;
     }
 }
