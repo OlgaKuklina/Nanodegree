@@ -121,12 +121,14 @@ public class MovieDetailsViewActivity extends Activity {
             trailerList.addView(view);
 
         }
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("video/*");
-        Uri uri = trailerData.get(0).getTrailerUri();
-        Log.v(TAG, "trailerData.get(0) = " + trailerData.get(0).getTrailerUri());
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        mShareActionProvider.setShareIntent(shareIntent);
+        if(data != null && !data.isEmpty()) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("video/*");
+            Uri uri = data.get(0).getTrailerUri();
+            Log.v(TAG, "trailerData.get(0) = " + data.get(0).getTrailerUri());
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     private void populateReviewList(List<ReviewData> data) {
