@@ -123,10 +123,10 @@ public class MovieDetailsViewActivity extends Activity {
         }
         if(data != null && !data.isEmpty()) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("video/*");
+            shareIntent.setType("text/plain");
             Uri uri = data.get(0).getTrailerUri();
             Log.v(TAG, "trailerData.get(0) = " + data.get(0).getTrailerUri());
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, uri.toString());
             mShareActionProvider.setShareIntent(shareIntent);
         }
     }
