@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
         popularMovies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PopularMoviesActivity.class);
+                Intent intent = new Intent(MainActivity.this, PopularMoviesUniversalActivity.class);
                 startActivity(intent);
             }
         });

@@ -10,7 +10,6 @@
     <string name="capstone_my_own_app">CAPSTONE: MY OWN APP</string>
     <string name="title_activity_artist_search">ArtistSearchActivity</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_popular_movies">PopularMoviesActivity</string>
     <string name="title_activity_movie_details_view">MovieDetailsViewActivity</string>
     <string name="pref_select_sort_type">Select sorting type</string>
@@ -24,5 +23,7 @@
     <string name="details_view_text_vote_average_divider">/10</string>
     <string name="popular_movies_activity_text_conection_error">Can not load the data from remote service</string>
     <string name="network_not_available_message">Network is not available</string>
+    <string name="title_activity_popular_movies_universal">Popular Movies</string>
+    <string name="title_activity_details_view_universal">Details</string>
 
 </resources>

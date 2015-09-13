@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/detail_view_background_color"
-    tools:context="com.example.android.myappportfolio.MovieDetailsViewActivity">
+    tools:context="com.example.android.myappportfolio.DetailsViewUniversalActivityFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,9 +82,9 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:background="@color/detail_view_star_button_color"
-                    android:textColor="@color/detail_view_movie_details_text_color"
                     android:text="MARK AS FAVORITE"
-                    android:visibility="gone"/>
+                    android:textColor="@color/detail_view_movie_details_text_color"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/delete_from_fav_button"
@@ -93,9 +93,9 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:background="@color/detail_view_star_button_color"
-                    android:textColor="@color/detail_view_movie_details_text_color"
                     android:text="DELETE FROM FAVORITE"
-                    android:visibility="gone"/>
+                    android:textColor="@color/detail_view_movie_details_text_color"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>

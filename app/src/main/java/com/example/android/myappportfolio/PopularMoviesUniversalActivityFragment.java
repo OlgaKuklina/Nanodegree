@@ -1,65 +1,67 @@
 package com.example.android.myappportfolio;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import java.util.List;
+/**
+ * A placeholder fragment containing a simple view.
+ */
+public class PopularMoviesUniversalActivityFragment extends Fragment {
 
-public class PopularMoviesActivity extends Activity {
-    private static final String TAG = PopularMoviesActivity.class.getSimpleName();
+    private static final String TAG = PopularMoviesUniversalActivityFragment.class.getSimpleName();
     private static final String SHARED_PREF_NAME = "com.example.android.myappportfolio.popular.movies";
     private ImageAdapter adapter;
     private String sortOrder;
     private GridView gridview;
 
+    public PopularMoviesUniversalActivityFragment() {
+    }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popular_movies);
-        Log.d(TAG, "Hi");
-        gridview = (GridView) findViewById(R.id.gridview);
-        adapter = new ImageAdapter(this);
-        PopularMoviesActivityState state = (PopularMoviesActivityState)getLastNonConfigurationInstance();
-        Log.d(TAG," state = " + state);
-        if(state != null) {
-            adapter.addAll(state.getMovieDatas());
-            sortOrder = state.getSortOrder();
-        }
+        Log.d(TAG, this + ": onCreate()");
+        adapter = new ImageAdapter(getActivity());
+        setRetainInstance(true);
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_popular_movies_universal, container, false);
+
+        gridview = (GridView) view.findViewById(R.id.gridview);
         gridview.setAdapter(adapter);
-
-
-
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
                 int movieId = (int) adapter.getItemId(position);
-                Intent intent = new Intent(PopularMoviesActivity.this, MovieDetailsViewActivity.class)
+                Intent intent = new Intent(getActivity(), DetailsViewUniversalActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, movieId);
                 startActivity(intent);
             }
         });
+        return view;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = this.getSharedPreferences(SHARED_PREF_NAME, 0);
+        SharedPreferences prefs = getActivity().getSharedPreferences(SHARED_PREF_NAME, 0);
         String sortOrderUpdate;
         sortOrderUpdate = prefs.getString("pref_sorting", getString(R.string.pref_sort_default));
         Log.d(TAG, "sortOrderUpdate = " + sortOrderUpdate + ", sortOrder = " + sortOrder);
@@ -69,50 +71,27 @@ public class PopularMoviesActivity extends Activity {
         if (!isConnected && !sortOrderUpdate.equals("favorites")) {
             Log.e(TAG, "Network is not available");
 
-            Toast toast = Toast.makeText(getApplicationContext(), R.string.network_not_available_message, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(), R.string.network_not_available_message, Toast.LENGTH_LONG);
             toast.show();
             return;
         }
 
-        if(!sortOrderUpdate.equals(sortOrder) || sortOrderUpdate.equals("favorites")) {
+        if (!sortOrderUpdate.equals(sortOrder) || sortOrderUpdate.equals("favorites")) {
             sortOrder = sortOrderUpdate;
             adapter.clearData();
-            if(sortOrderUpdate.equals("favorites")){
-                FetchFavoriteMovieTask task = new FetchFavoriteMovieTask(adapter, getContentResolver());
+            if (sortOrderUpdate.equals("favorites")) {
+                FetchFavoriteMovieTask task = new FetchFavoriteMovieTask(adapter, getActivity().getContentResolver());
                 task.execute();
             }
         }
-        if(!sortOrderUpdate.equals("favorites")) {
+        if (!sortOrderUpdate.equals("favorites")) {
             gridview.setOnScrollListener(new PopularMovieViewScrollListener());
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_popular_movies, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, PopularMoviesSettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private boolean checkInternetConnection() {
         ConnectivityManager cm =
-                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
@@ -120,13 +99,6 @@ public class PopularMoviesActivity extends Activity {
 
         return isConnected;
     }
-
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-        Log.d(TAG, "In onRetainNonConfigurationInstance = ");
-        return new PopularMoviesActivityState(sortOrder, adapter.getMovieData());
-    }
-
 
     private class PopularMovieViewScrollListener implements AbsListView.OnScrollListener, FetchMovieListener {
         private static final int PAGE_SIZE = 20;
@@ -161,7 +133,7 @@ public class PopularMoviesActivity extends Activity {
         @Override
         public void onFetchFailed() {
             loadingState = false;
-            Toast.makeText(PopularMoviesActivity.this, R.string.popular_movies_activity_text_conection_error, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.popular_movies_activity_text_conection_error, Toast.LENGTH_LONG).show();
         }
     }
 }

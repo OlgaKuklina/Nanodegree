@@ -8,12 +8,12 @@ import java.util.List;
 public class MovieDetailsViewActivityState {
     private final List<TrailerData> trailerDatas;
     private final List<ReviewData> reviewDatas;
-    private final MovieDataContainer movieDataContainer;
+    private final MovieDataContainer detailDatas;
 
-    public MovieDetailsViewActivityState(List<TrailerData> trailerDatas, List<ReviewData> reviewDatas, MovieDataContainer movieDataContainer) {
+    public MovieDetailsViewActivityState(List<TrailerData> trailerDatas, List<ReviewData> reviewDatas, MovieDataContainer detailDatas) {
         this.trailerDatas = trailerDatas;
         this.reviewDatas = reviewDatas;
-        this.movieDataContainer = movieDataContainer;
+        this.detailDatas = detailDatas;
     }
 
     public List<TrailerData> getTrailerDatas() {
@@ -24,7 +24,7 @@ public class MovieDetailsViewActivityState {
         return reviewDatas;
     }
 
-    public MovieDataContainer getMovieDataContainer() {
-        return movieDataContainer;
+    public MovieDataContainer getDetailDatas() {
+        return detailDatas;
     }
 }

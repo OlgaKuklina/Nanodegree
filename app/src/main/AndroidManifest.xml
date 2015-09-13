@@ -23,28 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PopularMoviesActivity"
-            android:label="@string/title_activity_popular_movies"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.myappportfolio.MainActivity" />
-        </activity>
-        <activity
-            android:name=".MovieDetailsViewActivity"
-            android:label="@string/title_activity_movie_details_view"
-            android:parentActivityName=".PopularMoviesActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.myappportfolio.PopularMoviesActivity" />
-        </activity>
-        <activity
             android:name=".PopularMoviesSettingsActivity"
             android:label="@string/title_popular_movies_settings_activity"
-            android:parentActivityName=".PopularMoviesActivity" >
+            android:parentActivityName=".PopularMoviesUniversalActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.myappportfolio.PopularMoviesActivity" />
+                android:value="com.example.android.myappportfolio.PopularMoviesUniversalActivity" />
         </activity>
 
         <provider
@@ -53,6 +37,29 @@
             android:enabled="true"
             android:exported="true" >
         </provider>
+
+        <activity
+            android:name=".PopularMoviesUniversalActivity"
+            android:label="@string/title_activity_popular_movies_universal"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.myappportfolio.MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DetailsViewUniversalActivity"
+            android:label="@string/title_activity_details_view_universal"
+            android:parentActivityName=".PopularMoviesUniversalActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.myappportfolio.PopularMoviesUniversalActivity" />
+        </activity>
     </application>
 
 </manifest>
