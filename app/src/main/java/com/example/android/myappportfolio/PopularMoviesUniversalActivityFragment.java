@@ -30,14 +30,14 @@ public class PopularMoviesUniversalActivityFragment extends Fragment {
 
     public PopularMoviesUniversalActivityFragment() {
     }
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, this + ": onCreate()");
         adapter = new ImageAdapter(getActivity());
         setRetainInstance(true);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

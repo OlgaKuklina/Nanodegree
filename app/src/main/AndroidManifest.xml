@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.myappportfolio" >
+    package="com.example.android.myappportfolio">
 
     <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
@@ -12,10 +12,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +25,7 @@
         <activity
             android:name=".PopularMoviesSettingsActivity"
             android:label="@string/title_popular_movies_settings_activity"
-            android:parentActivityName=".PopularMoviesUniversalActivity" >
+            android:parentActivityName=".PopularMoviesUniversalActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.myappportfolio.PopularMoviesUniversalActivity" />
@@ -35,13 +35,12 @@
             android:name=".FavoriteMovieCollectionProvider"
             android:authorities="com.example.popularmovies.provider"
             android:enabled="true"
-            android:exported="true" >
-        </provider>
+            android:exported="true"></provider>
 
         <activity
             android:name=".PopularMoviesUniversalActivity"
             android:label="@string/title_activity_popular_movies_universal"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.myappportfolio.MainActivity" />
@@ -55,7 +54,7 @@
         <activity
             android:name=".DetailsViewUniversalActivity"
             android:label="@string/title_activity_details_view_universal"
-            android:parentActivityName=".PopularMoviesUniversalActivity" >
+            android:parentActivityName=".PopularMoviesUniversalActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.myappportfolio.PopularMoviesUniversalActivity" />

@@ -19,7 +19,7 @@ public class DetailsViewUniversalActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_details_view_universal, menu);
-        DetailsViewUniversalActivityFragment fragment = (DetailsViewUniversalActivityFragment)getFragmentManager().findFragmentById(R.id.fragment);
+        DetailsViewUniversalActivityFragment fragment = (DetailsViewUniversalActivityFragment) getFragmentManager().findFragmentById(R.id.fragment);
         fragment.onCreateOptionsMenu(menu);
         return true;
     }

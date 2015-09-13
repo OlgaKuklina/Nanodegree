@@ -48,25 +48,27 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
     private static final String TAG = DetailsViewUniversalActivityFragment.class.getSimpleName();
     private static final Uri URI = Uri.parse("content://com.example.popularmovies.provider/favorite");
     private static final String POSTER_BASE_URI = "http://image.tmdb.org/t/p/w185";
-    private MovieDataContainer detailDatas;
+
+    private MovieDetailsViewActivityState state;
     private ShareActionProvider mShareActionProvider;
+    private MovieDataContainer detailDatas;
     private List<TrailerData> trailerData;
     private List<ReviewData> reviewData;
-    private ImageView moviePoster;
-    private TextView movieDate;
-    private TextView movieDuration;
-    private TextView movieVoteAverage;
-    private TextView moviePlot;
-    private TextView title;
+    private Button deleteFromFavButton;
     private LinearLayout trailerList;
     private LinearLayout reviewList;
     private Button markAsFavButton;
-    private Button deleteFromFavButton;
-    private MovieDetailsViewActivityState state;
-    private MenuItem item;
-    private int id;
+    private ImageView moviePoster;
+    private TextView movieVoteAverage;
+    private TextView movieDate;
+    private TextView movieDuration;
+    private TextView moviePlot;
+    private TextView title;
     private Intent sharedIntent;
+    private MenuItem item;
     private boolean isTrailerLoaded;
+    private int id;
+
 
     public DetailsViewUniversalActivityFragment() {
     }
@@ -158,7 +160,6 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
             shareIntent.setType("text/plain");
             Uri uri = data.get(0).getTrailerUri();
             shareIntent.putExtra(Intent.EXTRA_TEXT, uri.toString());
-            Log.v(TAG, "mShareActionProvider " + mShareActionProvider);
             if(item == null) {
                 this.sharedIntent = shareIntent;
             }else {
@@ -232,7 +233,6 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
         // Locate MenuItem with ShareActionProvider
         // Fetch and store ShareActionProvider
         // Return true to display menu
-        Log.v(TAG, "onCreateOptionsMenu " + sharedIntent);
         item = menu.findItem(R.id.menu_item_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         if(isTrailerLoaded) {
