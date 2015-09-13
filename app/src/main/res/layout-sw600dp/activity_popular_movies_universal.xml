@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/tablet_popular_movies_fragment_layout"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone">
+        <fragment
+            android:id="@+id/tablet_details_fragment"
+            android:name="com.example.android.myappportfolio.DetailsViewUniversalActivityFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_details_view_universal"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1">
+
+        <fragment
+            android:id="@+id/tablet_popular_movies_fragment"
+            android:name="com.example.android.myappportfolio.PopularMoviesUniversalActivityFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_popular_movies_universal" />
+    </RelativeLayout>
+
+</LinearLayout>
+

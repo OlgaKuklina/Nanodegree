@@ -1,5 +1,6 @@
 package com.example.android.myappportfolio;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -43,17 +44,16 @@ public class PopularMoviesUniversalActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_popular_movies_universal, container, false);
 
         gridview = (GridView) view.findViewById(R.id.gridview);
+        if (getActivity() instanceof OnMovieClickListener) {
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    int movieId = (int) adapter.getItemId(position);
+                    ((OnMovieClickListener) getActivity()).onMovieClick(movieId);
+                }
+            });
+        }
         gridview.setAdapter(adapter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-
-                int movieId = (int) adapter.getItemId(position);
-                Intent intent = new Intent(getActivity(), DetailsViewUniversalActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, movieId);
-                startActivity(intent);
-            }
-        });
         return view;
     }
 
@@ -88,6 +88,7 @@ public class PopularMoviesUniversalActivityFragment extends Fragment {
             gridview.setOnScrollListener(new PopularMovieViewScrollListener());
         }
     }
+
 
     private boolean checkInternetConnection() {
         ConnectivityManager cm =

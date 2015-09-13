@@ -66,6 +66,7 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
     private MenuItem item;
     private int id;
     private Intent sharedIntent;
+    private boolean isTrailerLoaded;
 
     public DetailsViewUniversalActivityFragment() {
     }
@@ -91,20 +92,11 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
         markAsFavButton = (Button) view.findViewById(R.id.mark_as_fav_button);
         deleteFromFavButton = (Button) view.findViewById(R.id.delete_from_fav_button);
         Intent intent = getActivity().getIntent();
+        Log.v(TAG,"oncreate - intent = " + intent);
+        isTrailerLoaded = false;
+        item = null;
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            id = intent.getIntExtra(Intent.EXTRA_TEXT, -1);
-            if (state == null) {
-                FetchDetailsMovieTask task = new FetchDetailsMovieTask();
-                task.execute(id);
-                FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
-                tTask.execute(id);
-                FetchReviewMovieTask rTask = new FetchReviewMovieTask();
-                rTask.execute(id);
-            } else {
-                populateDetailsViewData(detailDatas = state.getDetailDatas());
-                populateReviewList(reviewData = state.getReviewDatas());
-                populateTrailerList(trailerData = state.getTrailerDatas());
-            }
+            fetchMovieData(intent.getIntExtra(Intent.EXTRA_TEXT, -1));
         }
         Cursor cursor = getActivity().getContentResolver().query(ContentUris.withAppendedId(URI, id), new String[]{COLUMN_NAME_MOVIE_ID}, null, null, null);
         if (cursor.getCount() != 0) {
@@ -123,7 +115,31 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
         });
         return view;
     }
+
+    public void fetchMovieData(int id) {
+        this.id = id;
+        trailerList.removeAllViews();
+        reviewList.removeAllViews();
+
+        if (state == null) {
+            FetchDetailsMovieTask task = new FetchDetailsMovieTask();
+            task.execute(id);
+            FetchTrailerMovieTask tTask = new FetchTrailerMovieTask();
+            tTask.execute(id);
+            FetchReviewMovieTask rTask = new FetchReviewMovieTask();
+            rTask.execute(id);
+        } else {
+            Log.v(TAG, "state = "  + state.getTrailerDatas());
+            populateDetailsViewData(detailDatas = state.getDetailDatas());
+            populateReviewList(reviewData = state.getReviewDatas());
+            populateTrailerList(trailerData = state.getTrailerDatas());
+        }
+    }
+    public void clearState() {
+        state = null;
+    }
     private void populateTrailerList(List<TrailerData> data) {
+        Log.v(TAG, "populateTrailerList - data = " + data);
         for (final TrailerData trailer : data) {
             View view = getActivity().getLayoutInflater().inflate(R.layout.movie_trailer_list_item, null);
             TextView tralerName = (TextView) view.findViewById(R.id.trailer_name);
@@ -136,23 +152,24 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
             });
             trailerList.addView(view);
         }
+        Log.v(TAG, "data " + data);
         if(data != null && !data.isEmpty()) {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             Uri uri = data.get(0).getTrailerUri();
             shareIntent.putExtra(Intent.EXTRA_TEXT, uri.toString());
-            if(mShareActionProvider == null) {
+            Log.v(TAG, "mShareActionProvider " + mShareActionProvider);
+            if(item == null) {
                 this.sharedIntent = shareIntent;
             }else {
                 mShareActionProvider.setShareIntent(shareIntent);
-                item.setVisible(true);
                 sharedIntent = null;
+                item.setVisible(true);
             }
-        }else {
+        }else if(item != null) {
             item.setVisible(false);
-
         }
-
+        isTrailerLoaded = true;
     }
 
     private void populateReviewList(List<ReviewData> data) {
@@ -215,14 +232,16 @@ public class DetailsViewUniversalActivityFragment extends Fragment {
         // Locate MenuItem with ShareActionProvider
         // Fetch and store ShareActionProvider
         // Return true to display menu
-
+        Log.v(TAG, "onCreateOptionsMenu " + sharedIntent);
         item = menu.findItem(R.id.menu_item_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-        if(sharedIntent != null) {
+        if(isTrailerLoaded) {
+            if(sharedIntent != null) {
             mShareActionProvider.setShareIntent(sharedIntent);
             item.setVisible(true);
-        }else {
+             }else{
             item.setVisible(false);
+            }
         }
         return true;
     }
